@@ -12,7 +12,7 @@ def already_exists(s, slug):
               params={"slug": slug, "status": "any"})
     data = r.json()
     return bool(data)
-```
+```text
 
 `status=any`가 필요합니다. 공개 글만 검색하면 예약 글이나 임시 글이 걸러지지 않습니다. 이 옵션은 인증된 요청에서만 동작합니다.
 
@@ -23,7 +23,7 @@ def publish_one(s, item):
     if already_exists(s, item["slug"]):
         return "skip"
     ...
-```
+```text
 
 건너뛴 것도 기록에 남깁니다. "이미 있음"과 "실패"는 다르게 취급해야 다음 판단이 가능합니다.
 
@@ -49,7 +49,7 @@ def publish_one(s, item):
     {"slug": "tsmc-2nm-future", "id": 874, "status": "future", "date": "2026-11-26T10:40:00+09:00"}
   ]
 }
-```
+```text
 
 이 파일은 두 가지에 쓰입니다. 재실행할 때 중복을 막는 것, 그리고 주제 중복을 확인하는 것. 다음 회차에서 원고를 만들기 전에 이 파일의 제목을 읽어, 비슷한 주제가 최근 일주일 안에 있는지 봅니다.
 
@@ -71,7 +71,7 @@ KST = timezone(timedelta(hours=9))
 
 def iso_kst(dt):
     return dt.astimezone(KST).isoformat(timespec="seconds")
-```
+```text
 
 ## 오늘 발행분이 예약으로 밀렸을 때
 

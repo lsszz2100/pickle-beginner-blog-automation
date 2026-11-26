@@ -40,7 +40,7 @@
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}\n" https://내도메인/
-```
+```text
 
 200이 나오면 신청하고, 503이나 500이면 복구 후에 신청합니다.
 

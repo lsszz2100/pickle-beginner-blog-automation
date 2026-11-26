@@ -54,7 +54,7 @@ report = {
     "traffic_peak_mb": traffic_peak_7d(),
     "failed_links": check_affiliate_links(),
 }
-```
+```text
 
 이 값을 매주 같은 형식으로 남기면, 4주 뒤에 추세가 보입니다. 숫자 하나가 아니라 변화를 보는 것이 핵심입니다.
 
