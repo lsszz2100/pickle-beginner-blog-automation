@@ -3,6 +3,7 @@
 - [00. 들어가며](pages/00-chapter.md)
   - [00-1. 이 책이 다루는 것](pages/00-1-what-this-book-covers.md)
   - [00-2. 준비물과 읽는 순서](pages/00-2-prepare-and-order.md)
+  - [00-3. 피클에게 시키고 답장하기: 실전 대화 흐름](pages/00-3-pickle-dialog-flow.md)
 - [01. 블로그 자동화를 시작하는 이유](pages/01-chapter.md)
   - [01-1. 블로그 수익은 어디서 오는가](pages/01-1-where-revenue-comes-from.md)
   - [01-2. 자동화가 줄이는 것과 줄이지 못하는 것](pages/01-2-what-automation-changes.md)
