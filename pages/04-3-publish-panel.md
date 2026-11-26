@@ -22,7 +22,7 @@ from PIL import Image
 im = Image.open("thumb_orig.jpg")
 im.thumbnail((1200, 1200))
 im.convert("RGB").save("thumb.jpg", quality=82, optimize=True)
-```text
+```
 
 ## 태그
 
@@ -51,6 +51,6 @@ im.convert("RGB").save("thumb.jpg", quality=82, optimize=True)
 
 ```bash
 curl -s https://내블로그.tistory.com/rss | head -40
-```text
+```
 
 RSS의 최신 항목에서 제목, 링크, 발행 시각을 확인합니다. 예약 글은 공개 시각이 지나야 RSS에 나타납니다.

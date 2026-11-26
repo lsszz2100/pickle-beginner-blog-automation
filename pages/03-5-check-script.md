@@ -85,14 +85,14 @@ if __name__ == "__main__":
             print("  통과")
         total += len(errors)
     sys.exit(1 if total else 0)
-```text
+```
 
 ## 실행
 
 ```bash
 python3 check_post.py gen/01.html gen/02.html gen/03.html
 echo "exit: $?"
-```text
+```
 
 실패가 하나라도 있으면 종료 코드가 1이 되고, 발행 스크립트는 그 배치를 시작하지 않습니다. 이 종료 코드가 자동화의 안전장치입니다. 사람이 읽지 않아도 규격 위반은 발행되지 않습니다.
 

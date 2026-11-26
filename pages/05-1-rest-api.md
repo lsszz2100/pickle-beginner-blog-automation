@@ -16,13 +16,13 @@
 ~/.config/autoblog/wordpress.txt
 user: <관리자 아이디>
 app_password: <발급받은 값>
-```text
+```
 
 파일 권한은 소유자만 읽을 수 있게 둡니다.
 
 ```bash
 chmod 600 ~/.config/autoblog/wordpress.txt
-```text
+```
 
 이 파일은 저장소에 올리지 않습니다. 스크립트에는 파일 경로만 적고, 값은 실행할 때 읽어 옵니다.
 
@@ -44,7 +44,7 @@ def session_for(user, app_password, base):
 s = session_for("admin", "abcd efgh ijkl mnop", "https://내도메인")
 r = s.get(s.base + "/wp-json/wp/v2/users/me")
 print(r.status_code, r.json().get("name"))
-```text
+```
 
 200과 함께 표시 이름이 나오면 인증이 끝난 것입니다.
 
@@ -71,4 +71,4 @@ def is_json(resp):
         return True
     except Exception:
         return False
-```text
+```

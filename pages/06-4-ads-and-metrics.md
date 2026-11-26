@@ -41,7 +41,7 @@ def moving_average(values, window=7):
         chunk = values[max(0, i - window + 1):i + 1]
         out.append(sum(chunk) / len(chunk))
     return out
-```text
+```
 
 ## 수익이 안 나올 때 확인하는 세 가지
 

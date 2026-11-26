@@ -26,7 +26,7 @@ def count_chars(html_text):
     text = html.unescape(text)
     text = re.sub(r"\s+", " ", text).strip()
     return len(text)
-```text
+```
 
 3,000자에서 5,000자 사이면 통과입니다. 이 범위에서 실제 발행한 글은 대개 3,500자 부근에 몰립니다.
 

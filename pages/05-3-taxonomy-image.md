@@ -21,7 +21,7 @@ def pick_category(s, candidates, fallback_id):
             if norm(cand) in norm(c["name"]):
                 return c["id"]
     return fallback_id
-```text
+```
 
 ## 태그는 재사용을 먼저 본다
 

@@ -7,7 +7,7 @@
 ```bash
 python3 publish_batch.py --dry-run    # 검사만
 python3 publish_batch.py             # 실제 발행
-```text
+```
 
 종료 코드는 세 가지입니다.
 
@@ -29,7 +29,7 @@ python3 publish_batch.py             # 실제 발행
            "스크립트", "생산성", "직장인", "초보", "실습"],
   "category_candidates": ["IT·코딩 실습", "IT"]
 }
-```text
+```
 
 ## 2단계: 검사
 
@@ -55,7 +55,7 @@ def ensure_tag(s, name):
             return t["id"]
     r = s.post(f"{s.base}/wp-json/wp/v2/tags", json={"name": name})
     return r.json()["id"]
-```text
+```
 
 ## 6단계: 대표이미지
 
@@ -67,7 +67,7 @@ def ensure_tag(s, name):
 
 첫 글은 즉시 공개, 나머지는 예약입니다.
 
-```python
+```text
 payload = {
     "title": m["title"],
     "slug": m["slug"],
@@ -80,7 +80,7 @@ payload = {
     "comment_status": "closed",
 }
 r = s.post(f"{s.base}/wp-json/wp/v2/posts", json=payload)
-```text
+```
 
 즉시 공개하는 글에는 `date`를 넣지 않습니다. 미래 시각과 공개 상태를 함께 보내면 서버가 예약으로 해석하는 경우가 있습니다.
 
@@ -93,6 +93,6 @@ def verify(s, post_id):
     r = s.get(f"{s.base}/wp-json/wp/v2/posts/{post_id}", params={"context": "edit"})
     p = r.json()
     return {"status": p["status"], "featured": p["featured_media"]}
-```text
+```
 
 응답이 성공이어도 실제 저장 결과가 다를 수 있으므로, 조회를 한 번 더 하는 것이 이 단계의 목적입니다.

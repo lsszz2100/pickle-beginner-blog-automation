@@ -45,6 +45,6 @@
   "min_sections": 5,
   "max_sections": 7
 }
-```text
+```
 
 이 파일 하나가 앞으로 모든 장에서 기준이 됩니다.

@@ -46,7 +46,7 @@
 
 사람이 매주 표를 채우는 대신, 확인 결과를 한 파일에 모으게 만들 수 있습니다.
 
-```python
+```text
 report = {
     "posts_total": count_posts(),
     "indexed": gsc_indexed_count(),
@@ -54,7 +54,7 @@ report = {
     "traffic_peak_mb": traffic_peak_7d(),
     "failed_links": check_affiliate_links(),
 }
-```text
+```
 
 이 값을 매주 같은 형식으로 남기면, 4주 뒤에 추세가 보입니다. 숫자 하나가 아니라 변화를 보는 것이 핵심입니다.
 

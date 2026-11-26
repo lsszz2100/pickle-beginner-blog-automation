@@ -34,7 +34,7 @@ def next_slot(last_published, now):
     base = max(last_published, now + timedelta(minutes=40))
     gap = random.randint(40, 120)
     return base + timedelta(minutes=gap), gap
-```text
+```
 
 ## 실패한 두 가지 방식
 
@@ -52,7 +52,7 @@ def next_slot(last_published, now):
   "blog-a": {"last_slot": "2026-11-26T21:40:00+09:00", "count": 10},
   "blog-b": {"last_slot": "2026-11-26T22:05:00+09:00", "count": 10}
 }
-```text
+```
 
 다음 회차는 이 값 이후부터 계산합니다. 사람이 읽어도 오늘 몇 편이 어디까지 걸렸는지 알 수 있어야 합니다.
 

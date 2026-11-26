@@ -25,7 +25,7 @@
 
 ```text
 이미지 출처: Pexels (CC0)
-```text
+```
 
 ## 하지 말아야 할 것
 
@@ -52,7 +52,7 @@ def is_real_image(path):
     with open(path, "rb") as f:
         head = f.read(12)
     return head.startswith(b"\x89PNG") or head.startswith(b"\xff\xd8\xff")
-```text
+```
 
 PNG는 `89 50 4E 47`, JPEG는 `FF D8 FF`로 시작합니다. 이 두 줄이면 140장의 가짜 이미지를 1초에 걸러 냅니다.
 

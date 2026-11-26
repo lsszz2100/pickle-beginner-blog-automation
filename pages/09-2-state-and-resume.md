@@ -21,7 +21,7 @@
   "last_slot": "2026-11-26T21:40:00+09:00",
   "slugs": ["python-work-automation-5-examples", "tsmc-2nm-future"]
 }
-```text
+```
 
 `done`과 `failed`를 나눕니다. 실패는 다시 시도하고, 완료는 건너뜁니다. 하나로 합치면 재시도할 것과 아닌 것이 섞입니다.
 
@@ -31,7 +31,7 @@
 def pending(state, items):
     done = set(state["done"])
     return [i for i in items if i["nn"] not in done]
-```text
+```
 
 실행 전에 이 함수로 남은 항목만 고릅니다. 재실행이 안전하면 작업을 작게 나눌 수 있고, 작게 나누면 실패의 영향이 줄어듭니다.
 
@@ -44,7 +44,7 @@ def pending(state, items):
 [07:18] 03 skip (이미 존재: python-work-automation-5-examples)
 [07:19] 04 fail (이미지 2장)
 [07:19] 중단: 실패 1건
-```text
+```
 
 한 줄에 결과와 근거를 함께 적습니다. "ok"만 있으면 나중에 검증할 수 없고, "fail"만 있으면 무엇이 문제였는지 알 수 없습니다.
 
