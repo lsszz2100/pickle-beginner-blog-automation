@@ -1,101 +1,74 @@
-# 03-5. 검수 스크립트 만들기
+# 03-5. 발행 전에 규격 위반을 걸러 내기
 
-발행 전에 원고 한 편을 검사하는 스크립트를 만듭니다. 이 스크립트를 통과하지 못한 원고는 발행 절차로 넘어가지 않습니다.
+## 이 절에서 하는 일
 
-## 검사 항목
+원고가 규격을 지켰는지 발행 전에 확인하는 절차를 만듭니다. 사람이 읽어 보는 검수는 하루 열 편을 넘으면 반드시 빠집니다. 그래서 검수도 피클에게 맡기고, 사용자는 결과만 봅니다.
 
-| 항목 | 조건 | 실패 시 |
-| --- | --- | --- |
-| 글자 수 | 3,000~5,000자 | 발행 중단 |
-| 섹션 | h1이 5~7개 | 발행 중단 |
-| 소제목 | h2가 1개 이상 | 경고 |
-| 이미지 | img가 3~7개 | 발행 중단 |
-| 태그 | 정확히 10개 | 발행 중단 |
-| 제목 | 10~40자 | 경고 |
-| 금지어 | 지정한 표현 미포함 | 경고 |
-| 출처 표기 | 이미지가 있으면 한 줄 | 경고 |
+## 이렇게 말하면 됩니다
 
-## 스크립트
+```
+발행 전 검수를 맡겨 줘.
+지금까지 정한 규격표로 원고를 검사하고, 어긋난 항목만 표로 보여 줘.
+- 분량(공백 포함), 소제목 수, 문단 수, 이미지 수, 대체 텍스트, 태그 수
+- 제목 길이와 금지어(과장 표현, 보장 문구)
+- 이미지 출처 표시와 제휴 고지 문구
+어긋난 항목이 있으면 발행하지 말고, 고칠 부분을 알려 줘.
+```
+
+## 피클이 되묻는 것
+
+| 피클의 질문 | 내가 고르는 답 |
+| --- | --- |
+| 어긋난 항목이 있으면 자동으로 고칠까요 | 고친 뒤 결과만 보고 |
+| 분량이 조금 모자라면 발행할까요 | 5% 안쪽이면 발행, 넘으면 다시 쓰기 |
+| 검수 결과를 어디에 남길까요 | 발행 전 표 한 장으로 보고 |
+
+## 검수 결과 표의 예
+
+| 항목 | 규격 | 이번 원고 | 판정 |
+| --- | --- | --- | --- |
+| 분량 | 3,000~5,000자 | 4,180자 | 통과 |
+| 소제목 | 3~5개 | 4개 | 통과 |
+| 이미지 | 3~7장 | 2장 | 다시 작성 |
+| 태그 | 10개 | 10개 | 통과 |
+| 제휴 고지 | 1회 | 1회 | 통과 |
+
+이 표 한 장이면 어떤 원고가 왜 멈췄는지 한눈에 보입니다. 매일 아침 표만 훑어도 발행 품질이 유지됩니다.
+
+## 발행 뒤에 확인하는 세 가지
+
+검수를 통과해도 실제 화면에서 어긋나는 경우가 있습니다. 발행 직후에 다음 세 가지를 확인하도록 미리 시켜 둡니다.
+
+1. 글 목록에서 제목과 대표이미지가 정상으로 보이는가
+2. 본문 첫 화면에서 광고 위치가 어색하지 않은가
+3. 링크가 눌렀을 때 새 창에서 열리는가
+
+## 잘 안 될 때는 이렇게 말합니다
+
+- "검수가 자꾸 통과하는데 글이 엉성해."라고 하면 금지어와 문체 항목을 검수에 추가합니다.
+- "검수에서 자꾸 걸려서 발행이 밀려."라고 하면 분량 허용 범위를 5%로 넓힙니다.
+- "검수 결과를 매일 보고 싶어."라고 하면 아침 보고에 검수 표를 붙이도록 정합니다.
+
+---
+
+## 참고: 검수를 자동으로 돌리는 방법
+
+규격이 숫자로 정해져 있으면 검사는 계산입니다. 아래는 분량, 태그 수, 이미지 수를 세는 최소한의 예다. 피클이 만들어 주는 검수 도구도 같은 계산을 한다.
 
 ```python
-#!/usr/bin/env python3
-import json, re, sys, html
-from pathlib import Path
+import re
 
-SPEC = {
-    "min_chars": 3000, "max_chars": 5000,
-    "min_images": 3, "max_images": 7,
-    "tags": 10, "min_h1": 5, "max_h1": 7,
-    "banned": ["완벽 가이드", "완전 정복", "궁극의"],
-}
-
-def text_of(doc):
-    t = re.sub(r"<script.*?</script>", " ", doc, flags=re.S)
-    t = re.sub(r"<[^>]+>", " ", t)
-    return re.sub(r"\s+", " ", html.unescape(t)).strip()
-
-def check(body_path):
-    body = Path(body_path).read_text(encoding="utf-8")
-    meta_path = Path(body_path).with_suffix(".meta.json")
-    meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
-    text = text_of(body)
-    errors, warnings = [], []
-
-    n = len(text)
-    if not SPEC["min_chars"] <= n <= SPEC["max_chars"]:
-        errors.append(f"본문 {n}자 (기준 {SPEC['min_chars']}~{SPEC['max_chars']})")
-
-    h1 = len(re.findall(r"<h1[ >]", body, flags=re.I))
-    if not SPEC["min_h1"] <= h1 <= SPEC["max_h1"]:
-        errors.append(f"h1 {h1}개 (기준 {SPEC['min_h1']}~{SPEC['max_h1']})")
-
-    images = re.findall(r"<img[^>]+src=[\"']([^\"']+)", body, flags=re.I)
-    if not SPEC["min_images"] <= len(images) <= SPEC["max_images"]:
-        errors.append(f"이미지 {len(images)}장 (기준 {SPEC['min_images']}~{SPEC['max_images']})")
-
-    tags = [t.strip() for t in meta.get("tags", []) if t.strip()]
-    if len(tags) != SPEC["tags"]:
-        errors.append(f"태그 {len(tags)}개 (기준 {SPEC['tags']})")
-    if len(set(tags)) != len(tags):
-        errors.append("중복 태그가 있습니다")
-
-    title = meta.get("title", "")
-    if not 10 <= len(title) <= 40:
-        warnings.append(f"제목 {len(title)}자")
-
-    for word in SPEC["banned"]:
-        if word in text or word in title:
-            warnings.append(f"금지어 포함: {word}")
-
-    if images and "이미지 출처" not in text:
-        warnings.append("이미지 출처 표기가 없습니다")
-
-    return errors, warnings
-
-if __name__ == "__main__":
-    total = 0
-    for path in sys.argv[1:]:
-        errors, warnings = check(path)
-        print(f"[{Path(path).name}]")
-        for e in errors:
-            print("  실패:", e)
-        for w in warnings:
-            print("  경고:", w)
-        if not errors:
-            print("  통과")
-        total += len(errors)
-    sys.exit(1 if total else 0)
+def check(text, tag_count, image_count):
+    body = re.sub(r"\s+", " ", text)
+    length = len(body)
+    issues = []
+    if not 3000 <= length <= 5000:
+        issues.append(f"분량 {length}자")
+    if tag_count != 10:
+        issues.append(f"태그 {tag_count}개")
+    if not 3 <= image_count <= 7:
+        issues.append(f"이미지 {image_count}장")
+    return issues
 ```
 
-## 실행
-
-```bash
-python3 check_post.py gen/01.html gen/02.html gen/03.html
-echo "exit: $?"
-```
-
-실패가 하나라도 있으면 종료 코드가 1이 되고, 발행 스크립트는 그 배치를 시작하지 않습니다. 이 종료 코드가 자동화의 안전장치입니다. 사람이 읽지 않아도 규격 위반은 발행되지 않습니다.
-
-## 경고와 실패를 나누는 이유
-
-경고는 발행을 막지 않습니다. 제목이 12자여도 검색에 실릴 수 있고, 출처 표기가 빠져도 글이 깨지지 않습니다. 반면 태그가 아홉 개인 글은 나중에 태그 체계를 흐트러뜨립니다. 판단이 서지 않는 항목은 경고로 두고, 실제로 문제를 일으킨 항목만 실패로 올립니다. 처음부터 전부 실패로 잡으면 통과하는 원고가 없어 절차를 끄게 됩니다.
+검사 결과는 발행을 막는 신호로만 쓰고, 고치는 일은 원고를 다시 쓰는 쪽이 빠릅니다. 숫자를 억지로 맞추면 문장이 어색해집니다.
